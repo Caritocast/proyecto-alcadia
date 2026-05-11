@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - MóvilChía</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --principal: #1a5c3a;
+            --verde: #2d7a50;
+            --verde-claro: #4CAF50;
+            --verde-muy-claro: #E8F5E9;
+            --dorado: #c8a84b;
+            --crema: #f5f0e8;
+            --crema-oscuro: #ede6d6;
+            --gris: #5a5a5a;
+            --gris-claro: #e0e0e0;
+            --blanco: #ffffff;
+            --rojo: #E53935;
+            --sombra: 0 4px 24px rgba(26, 92, 58, 0.08);
+            --sombra-lg: 0 8px 32px rgba(26, 92, 58, 0.12);
+            --sombra-xl: 0 16px 48px rgba(26, 92, 58, 0.15);
+            --radio: 16px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, var(--principal) 0%, var(--verde) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Fondo decorativo */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200, 168, 75, 0.1) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 80% at 10% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grid decorativo */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-xl);
+            padding: 48px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        /* ============= HEADER ============= */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--principal);
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .logo span {
+            color: var(--dorado);
+        }
+
+        .auth-subtitle {
+            color: var(--gris);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ============= TABS ============= */
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--gris-claro);
+        }
+
+        .auth-tab {
+            background: none;
+            border: none;
+            padding: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gris);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            position: relative;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .auth-tab:hover {
+            color: var(--verde);
+        }
+
+        .auth-tab.active {
+            color: var(--principal);
+            border-bottom-color: var(--verde);
+        }
+
+        /* ============= FORMS ============= */
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--principal);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--gris-claro);
+            border-radius: var(--radio);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: var(--crema);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--verde);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+        }
+
+        .error-text {
+            color: var(--rojo);
+            font-weight: 500;
+        }
+
+        .info-text {
+            color: var(--gris);
+            opacity: 0.8;
+        }
+
+        /* Checkbox */
+        .form-group.checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .form-group.checkbox input {
+            width: 20px;
+            min-width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .form-group.checkbox label {
+            margin: 0;
+            text-transform: none;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        /* ============= BOTONES ============= */
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radio);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ============= MENSAJES ============= */
+        .form-info {
+            text-align: center;
+            font-size: 13px;
+            color: var(--gris);
+            margin-bottom: 20px;
+        }
+
+        .form-info a {
+            color: var(--verde);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .form-info a:hover {
+            color: var(--principal);
+        }
+
+        .error-message {
+            background: #FFEBEE;
+            color: var(--rojo);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--rojo);
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-message {
+            background: var(--verde-muy-claro);
+            color: var(--principal);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--verde);
+            display: none;
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* ============= DECORACIÓN ============= */
+        .auth-decoration {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .decoration-shape {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(200, 168, 75, 0.1), rgba(76, 175, 80, 0.05));
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .shape-3 {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 10%;
+            opacity: 0.5;
+        }
+
+        /* ============= RESPONSIVE ============= */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 32px 24px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .auth-header {
+                margin-bottom: 32px;
+            }
+
+            .auth-tabs {
+                margin-bottom: 32px;
+                gap: 0;
+            }
+
+            .auth-tab {
+                padding: 14px 12px;
+                font-size: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 12px;
+            }
+
+            .shape-1 {
+                width: 250px;
+                height: 250px;
+                top: -80px;
+                right: -80px;
+            }
+
+            .shape-2 {
+                width: 200px;
+                height: 200px;
+                bottom: -30px;
+                left: -30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- HEADER -->
+            <div class="auth-header">
+                <div class="logo">Móvil<span>Chía</span></div>
+                <p class="auth-subtitle">Plataforma Ciudadana de Movilidad</p>
+            </div>
+
+            <!-- TABS -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Iniciar Sesión</button>
+                <button class="auth-tab" data-tab="registro">Registrarse</button>
+            </div>
+
+            <!-- FORM LOGIN -->
+            <form id="loginForm" class="auth-form active" data-form="login">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        name="email" 
+                        placeholder="tu@email.com"
+                        required
+                    >
+                    <small class="error-text" id="loginEmailError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        name="password" 
+                        placeholder="••••••••"
+                        required
+                    >
+                    <small class="error-text" id="loginPasswordError"></small>
+                </div>
+
+                <button type="submit" class="auth-btn">Iniciar Sesión</button>
+
+                <div class="form-info">
+                    ¿Olvidaste tu contraseña? 
+                    <a href="#">Recuperar aquí</a>
+                </div>
+
+                <div id="loginError" class="error-message"></div>
+                <div id="loginSuccess" class="success-message"></div>
+            </form>
+
+            <!-- FORM REGISTRO -->
+            <form id="registroForm" class="auth-form" data-form="registro">
+                <div class="form-group">
+                    <label for="regNombre">Nombre Completo</label>
+                    <input 
+                        type="text" 
+                        id="regNombre" 
+                        name="nombre" 
+                        placeholder="Juan Pérez"
+                        required
+                    >
+                    <small class="error-text" id="regNombreError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input 
+                        type="email" 
+                        id="regEmail" 
+                        name="email" 
+                        placeholder="tu@email.com"
+                        required
+                    >
+                    <small class="error-text" id="regEmailError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPhone">Teléfono (opcional)</label>
+                    <input 
+                        type="tel" 
+                        id="regPhone" 
+                        name="telefono" 
+                        placeholder="310 1234567"
+                    >
+                    <small class="error-text" id="regPhoneError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="regPassword" 
+                        name="password" 
+                        placeholder="Mínimo 8 caracteres"
+                        required
+                    >
+                    <small class="error-text" id="regPasswordError"></small>
+                    <small class="info-text">Usa al menos 8 caracteres, números y mayúsculas</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPasswordConfirm">Confirmar Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="regPasswordConfirm" 
+                        name="passwordConfirm" 
+                        placeholder="Repite la contraseña"
+                        required
+                    >
+                    <small class="error-text" id="regPasswordConfirmError"></small>
+                </div>
+
+                <div class="form-group checkbox">
+                    <input 
+                        type="checkbox" 
+                        id="regTerms" 
+                        name="terms"
+                        required
+                    >
+                    <label for="regTerms">Acepto los términos de servicio</label>
+                    <small class="error-text" id="regTermsError"></small>
+                </div>
+
+                <button type="submit" class="auth-btn">Crear Cuenta</button>
+
+                <div id="registroError" class="error-message"></div>
+                <div id="registroSuccess" class="success-message"></div>
+            </form>
+        </div>
+
+        <!-- Decoración -->
+        <div class="auth-decoration">
+            <div class="decoration-shape shape-1"></div>
+            <div class="decoration-shape shape-2"></div>
+            <div class="decoration-shape shape-3"></div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+        // Manejador simple de tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔐 DOM cargado - inicializando tabs');
+            
+            const tabs = document.querySelectorAll('.auth-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    console.log('Tab clickeado:', tabName);
+                    
+                    // Remover clase active de todos los tabs
+                    document.querySelectorAll('.auth-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Agregar clase active al tab clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todos los formularios
+                    document.querySelectorAll('.auth-form').forEach(form => {
+                        form.classList.remove('active');
+                    });
+                    
+                    // Mostrar el formulario correspondiente
+                    const form = document.querySelector(`[data-form="${tabName}"]`);
+                    if (form) {
+                        form.classList.add('active');
+                        console.log('Formulario mostrado:', tabName);
+                    }
+                });
+            });
+            
+            console.log('✅ Tabs inicializados');
+        });
+    </script>
+</body>
+</html>

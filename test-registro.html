@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Registro</title>
+</head>
+<body>
+    <h1>Test de Registro</h1>
+    <button onclick="testRegistro()">Probar Registro</button>
+    <pre id="resultado"></pre>
+
+    <script>
+        async function testRegistro() {
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = 'Enviando solicitud...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/registro', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre: 'Usuario Test',
+                        email: 'test' + Date.now() + '@prueba.com',
+                        password: 'Test123456',
+                        telefono: ''
+                    })
+                });
+
+                const data = await response.json();
+                resultado.textContent = JSON.stringify(data, null, 2) + '\n\nStatus: ' + response.status;
+
+                if (response.ok && data.user && data.user.token) {
+                    console.log('✅ Registro exitoso!');
+                    console.log('Usuario:', data.user);
+                    localStorage.setItem('token', data.user.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                } else {
+                    console.error('❌ Error:', data.error);
+                }
+            } catch (error) {
+                resultado.textContent = 'Error: ' + error.message;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

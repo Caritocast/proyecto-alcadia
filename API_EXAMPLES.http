@@ -1,0 +1,173 @@
+### Ejemplos de API para pruebas
+### Usa la extensión REST Client de VS Code
+### O copia en Postman/Insomnia
+
+@baseUrl = http://localhost:3000/api
+@token = 
+
+### ============================================================================
+### AUTENTICACIÓN
+### ============================================================================
+
+### Registrar nuevo usuario
+POST {{baseUrl}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "usuario de prueba",
+  "email": "test@example.com",
+  "password": "TestPassword123",
+  "telefono": "3101234567"
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "TestPassword123"
+}
+
+### Obtener datos del usuario actual
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### ============================================================================
+### REPORTES
+### ============================================================================
+
+### Listar todos los reportes
+GET {{baseUrl}}/reportes
+
+### Listar reportes filtrados
+GET {{baseUrl}}/reportes?tipo=congestión&severidad=crítica&page=1&limit=10
+
+### Obtener un reporte específico
+GET {{baseUrl}}/reportes/1
+
+### Crear nuevo reporte (requiere autenticación)
+POST {{baseUrl}}/reportes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Congestión Autopista Norte a las 8am",
+  "descripcion": "Todos los días a las 8 de la mañana hay caos vehicular en la Autopista Norte. Los carros avanzan solo 1 km en 45 minutos. Es urgente una solución.",
+  "tipo": "congestión",
+  "severidad": "crítica",
+  "ubicacion": "Autopista Norte, Calle 193 - Chía",
+  "latitud": 4.8597,
+  "longitud": -74.0186
+}
+
+### Actualizar un reporte (solo dueño o admin)
+PUT {{baseUrl}}/reportes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Titulo actualizado",
+  "descripcion": "Descripción actualizada con más detalles..."
+}
+
+### Eliminar un reporte (solo dueño o admin)
+DELETE {{baseUrl}}/reportes/1
+Authorization: Bearer {{token}}
+
+### ============================================================================
+### CONTACTOS
+### ============================================================================
+
+### Enviar mensaje de contacto (sin autenticación)
+POST {{baseUrl}}/contactos
+Content-Type: application/json
+
+{
+  "nombre": "María García",
+  "email": "maria@example.com",
+  "telefono": "3201234567",
+  "asunto": "Pregunta sobre REGIOTRAM del Norte",
+  "mensaje": "¿Cuándo entra en operación el REGIOTRAM del Norte? Necesito información para planificar mi transporte diario desde Chía a Bogotá."
+}
+
+### Listar todos los contactos (solo admin)
+GET {{baseUrl}}/contactos
+Authorization: Bearer {{token}}
+
+### Obtener un contacto específico (admin)
+GET {{baseUrl}}/contactos/1
+Authorization: Bearer {{token}}
+
+### Responder un contacto (admin)
+PUT {{baseUrl}}/contactos/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "respuesta_admin": "Gracias por tu pregunta. El REGIOTRAM está programado para...",
+  "respondido": true
+}
+
+### ============================================================================
+### USUARIOS (ADMINISTRACIÓN)
+### ============================================================================
+
+### Listar usuarios (solo admin)
+GET {{baseUrl}}/usuarios
+Authorization: Bearer {{token}}
+
+### Listar usuarios con filtros
+GET {{baseUrl}}/usuarios?rol=ciudadano&activo=true&page=1&limit=20
+Authorization: Bearer {{token}}
+
+### Obtener datos de un usuario
+GET {{baseUrl}}/usuarios/1
+Authorization: Bearer {{token}}
+
+### Actualizar perfil personal
+PUT {{baseUrl}}/usuarios/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Nuevo Nombre",
+  "telefono": "3209876543"
+}
+
+### Cambiar contraseña
+PUT {{baseUrl}}/usuarios/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "password_actual": "PasswordActual123",
+  "password_nuevo": "NuevaPassword456"
+}
+
+### Obtener reportes de un usuario
+GET {{baseUrl}}/usuarios/1/reportes
+Authorization: Bearer {{token}}
+
+### Eliminar un usuario (solo admin)
+DELETE {{baseUrl}}/usuarios/5
+Authorization: Bearer {{token}}
+
+### ============================================================================
+### NOTAS PARA PRUEBAS
+### ============================================================================
+
+### Después de registrar/login, copia el token en @token
+### Ejemplo:
+### @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoianVhbkBleGFtcGxlLmNvbSIsInJvbCI6ImNpdWRhZGFubyIsImlhdCI6MTY3ODAxNzMyNiwiZXhwIjoxNjc4NjIyMTI2fQ.abc123xyz...
+
+### Códigos HTTP esperados:
+### 200 OK - Operación exitosa
+### 201 Created - Recurso creado
+### 400 Bad Request - Datos inválidos
+### 401 Unauthorized - Falta token o es inválido
+### 403 Forbidden - Autenticado pero sin permiso
+### 404 Not Found - Recurso no existe
+### 409 Conflict - Email duplicado
+### 429 Too Many Requests - Demasiados intentos (rate limit)
+### 500 Internal Server Error - Error del servidor

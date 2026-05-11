@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foro de Movilidad - MóvilChía</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --principal: #1a5c3a;
+            --verde: #2d7a50;
+            --verde-claro: #4CAF50;
+            --verde-muy-claro: #E8F5E9;
+            --dorado: #c8a84b;
+            --crema: #f5f0e8;
+            --crema-oscuro: #ede6d6;
+            --tierra: #6b4f2a;
+            --gris: #5a5a5a;
+            --gris-claro: #e0e0e0;
+            --blanco: #ffffff;
+            --sombra: 0 4px 24px rgba(26, 92, 58, 0.08);
+            --sombra-lg: 0 8px 32px rgba(26, 92, 58, 0.12);
+            --radio: 16px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, var(--crema) 0%, #f9f6f1 100%);
+            color: var(--gris);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============= HEADER ============= */
+        header {
+            background: var(--principal);
+            color: white;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--sombra-lg);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo:hover {
+            color: var(--dorado);
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: var(--radio);
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: rgba(200, 168, 75, 0.2);
+            color: var(--dorado);
+        }
+
+        nav a.activo {
+            color: var(--dorado);
+            border-bottom: 2px solid var(--dorado);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radio);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--dorado);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b8956b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(200, 168, 75, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ============= HERO SECTION ============= */
+        .hero {
+            background: linear-gradient(135deg, var(--principal) 0%, var(--verde) 100%);
+            color: white;
+            padding: 100px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200, 168, 75, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(200, 168, 75, 0.2);
+            border: 1px solid rgba(200, 168, 75, 0.4);
+            color: var(--dorado);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero-badge::before {
+            content: '💬';
+            font-size: 16px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* ============= MAIN CONTENT ============= */
+        .container {
+            max-width: 1200px;
+            margin: -60px auto 40px;
+            padding: 0 48px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ============= BOTONES DE ACCIÓN ============= */
+        .foro-acciones {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra);
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filtro-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--gris-claro);
+            background: white;
+            color: var(--gris);
+            border-radius: 100px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filtro-btn:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+            background: var(--verde-muy-claro);
+        }
+
+        .filtro-btn.activo {
+            border-color: var(--principal);
+            background: var(--principal);
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 92, 58, 0.2);
+        }
+
+        #comentario-crear-btn {
+            display: none;
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: var(--radio);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        #comentario-crear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        /* ============= FORMULARIO ============= */
+        #comentario-form {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra-lg);
+            margin-bottom: 40px;
+            border-left: 4px solid var(--verde);
+        }
+
+        #comentario-form.mostrar {
+            display: block;
+        }
+
+        #comentario-form h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--principal);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--principal);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--gris-claro);
+            border-radius: var(--radio);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: var(--crema);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--verde);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-acciones {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--gris-claro);
+        }
+
+        .form-acciones button {
+            padding: 14px 32px;
+            border: none;
+            border-radius: var(--radio);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-guardar {
+            background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+            color: white;
+        }
+
+        .btn-guardar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-cancelar {
+            background: var(--crema);
+            color: var(--gris);
+            border: 1px solid var(--gris-claro);
+        }
+
+        .btn-cancelar:hover {
+            background: var(--crema-oscuro);
+            border-color: var(--gris);
+        }
+
+        /* ============= LISTA DE COMENTARIOS ============= */
+        #comentarios-lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .comentario-card {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radio);
+            border-left: 4px solid var(--verde);
+            box-shadow: var(--sombra);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comentario-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(76, 175, 80, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .comentario-card:hover {
+            box-shadow: var(--sombra-lg);
+            transform: translateY(-4px);
+        }
+
+        .comentario-card:hover::before {
+            opacity: 1;
+        }
+
+        .comentario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .comentario-titulo {
+            margin: 0;
+            color: var(--principal);
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .comentario-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-observacion {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .badge-denuncia {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .badge-sugerencia {
+            background: #F3E5F5;
+            color: #6A1B9A;
+        }
+
+        .badge-experiencia {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .comentario-contenido {
+            color: var(--gris);
+            margin: 16px 0;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .comentario-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--gris-claro);
+            font-size: 12px;
+            color: var(--gris);
+        }
+
+        .comentario-fecha {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comentario-zona {
+            display: inline-block;
+            color: var(--verde);
+            font-weight: 600;
+        }
+
+        .comentario-votos {
+            display: flex;
+            gap: 8px;
+        }
+
+        .voto-btn {
+            background: var(--crema);
+            border: 1px solid var(--gris-claro);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--gris);
+        }
+
+        .voto-btn:hover {
+            border-color: var(--verde);
+            color: var(--verde);
+            background: var(--verde-muy-claro);
+        }
+
+        .voto-btn-negativo:hover {
+            border-color: #E53935;
+            color: #E53935;
+            background: #FFEBEE;
+        }
+
+        /* ============= MENSAJES VACÍOS ============= */
+        .sin-comentarios {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, var(--verde-muy-claro) 0%, rgba(200, 168, 75, 0.05) 100%);
+            border-radius: var(--radio);
+            border: 1px solid var(--gris-claro);
+            color: var(--gris);
+        }
+
+        .sin-comentarios h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--principal);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .sin-comentarios p {
+            font-size: 15px;
+            opacity: 0.8;
+        }
+
+        .info-text {
+            display: block;
+            margin-top: 6px;
+            color: var(--gris);
+            font-size: 12px;
+        }
+
+        #ubicacion-info {
+            display: block;
+            margin-top: 6px;
+            color: var(--gris);
+            font-size: 12px;
+        }
+
+        .btn-ubicacion {
+            width: 100%;
+            padding: 14px;
+            background: #E8F5E9;
+            border: 1px solid var(--gris-claro);
+            border-radius: var(--radio);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--principal);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-ubicacion:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* ============= FOOTER ============= */
+        footer {
+            background: var(--principal);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 48px 40px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(200, 168, 75, 0.2);
+        }
+
+        footer strong {
+            color: var(--dorado);
+            font-weight: 600;
+        }
+
+        footer a {
+            color: var(--dorado);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* ============= RESPONSIVE ============= */
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 24px;
+            }
+
+            .header-content {
+                padding: 16px 24px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero {
+                padding: 60px 24px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .container {
+                padding: 0 24px;
+            }
+
+            .foro-acciones {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .filtros {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #comentario-crear-btn {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            #comentarios-lista {
+                grid-template-columns: 1fr;
+            }
+
+            .form-acciones {
+                flex-direction: column-reverse;
+            }
+
+            .form-acciones button {
+                width: 100%;
+            }
+
+            nav {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            nav a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🍃 MóvilChía</a>
+            <nav>
+                <a href="/">Inicio</a>
+                <a href="/views/foro.html" class="activo">Foro</a>
+                <a href="/#reportes">Reportar</a>
+            </nav>
+            <div class="user-actions" id="usuario-actions">
+                <a href="/views/login.html" class="btn btn-primary">Iniciar Sesión</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Comunidad Activa</div>
+            <h1>Foro de Movilidad</h1>
+            <p>Comparte tus observaciones, denuncias, sugerencias y experiencias sobre el tráfico y la movilidad en Chía</p>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="foro-acciones">
+            <div class="filtros">
+                <button class="filtro-btn activo" data-filtro-tipo="todos">Todos</button>
+                <button class="filtro-btn" data-filtro-tipo="observacion">📌 Observaciones</button>
+                <button class="filtro-btn" data-filtro-tipo="denuncia">⚠️ Denuncias</button>
+                <button class="filtro-btn" data-filtro-tipo="sugerencia">💡 Sugerencias</button>
+                <button class="filtro-btn" data-filtro-tipo="experiencia">📖 Experiencias</button>
+            </div>
+            <button id="comentario-crear-btn">✍️ Nuevo Comentario</button>
+        </div>
+
+        <!-- FORMULARIO CREAR COMENTARIO -->
+        <div id="comentario-form">
+            <h3>Comparte tu perspectiva</h3>
+            
+            <div class="form-group">
+                <label for="comentario-tipo">Tipo de comentario *</label>
+                <select id="comentario-tipo">
+                    <option value="observacion">📌 Observación</option>
+                    <option value="denuncia">⚠️ Denuncia</option>
+                    <option value="sugerencia">💡 Sugerencia</option>
+                    <option value="experiencia">📖 Experiencia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="comentario-titulo">Título *</label>
+                <input type="text" id="comentario-titulo" placeholder="Ej: Trancón en Cra 4 a las 7am">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="comentario-zona">Zona (opcional)</label>
+                    <input type="text" id="comentario-zona" placeholder="Ej: Centro, Sector Autopista">
+                </div>
+                <div class="form-group">
+                    <label for="comentario-tags">Etiquetas (opcional)</label>
+                    <input type="text" id="comentario-tags" placeholder="Ej: tráfico, accidente">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comentario-contenido">Descripción *</label>
+                <textarea id="comentario-contenido" placeholder="Cuéntanos más detalles sobre la situación..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="comentario-imagen">📸 Adjuntar Imagen (opcional)</label>
+                    <input type="file" id="comentario-imagen" accept="image/*" placeholder="Elige una imagen">
+                    <small class="info-text">Máx. 5MB. Formatos: JPG, PNG, WebP</small>
+                </div>
+                <div class="form-group">
+                    <label>📍 Ubicación (opcional)</label>
+                    <button type="button" class="btn-ubicacion" id="comentario-ubicacion-btn">
+                        📍 Obtener mi ubicación
+                    </button>
+                    <small id="ubicacion-info"></small>
+                </div>
+            </div>
+
+            <!-- Campo oculto para guardar coordenadas -->
+            <input type="hidden" id="comentario-lat">
+            <input type="hidden" id="comentario-lng">
+
+            <div class="form-acciones">
+                <button class="btn-cancelar" id="comentario-cancelar-btn">Cancelar</button>
+                <button class="btn-guardar" id="comentario-publicar-btn">Publicar Comentario</button>
+            </div>
+        </div>
+
+        <!-- LISTA DE COMENTARIOS -->
+        <div id="comentarios-lista"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 <strong>MóvilChía</strong> — Plataforma Ciudadana de Movilidad | Chía, Cundinamarca, Colombia</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="/js/comentarios.js"></script>
+</body>
+</html>
