@@ -2,11 +2,11 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
+    host: process.env.DB_HOST || 'dpg-d8a04brbc2fs73fkqu0g-a',
+    user: process.env.DB_USER || 'movilchia_user',
+    password: process.env.DB_PASSWORD || 'qSSkdQ0dILRS4h4ZiYhJwrb5e6jYen8z',
     database: process.env.DB_NAME || 'movilidad_chia',
-    port: process.env.DB_PORT || 3306,
+    port: process.env.DB_PORT || 5432,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
