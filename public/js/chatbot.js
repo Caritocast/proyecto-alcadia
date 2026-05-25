@@ -1,5 +1,5 @@
 const CHATBOT = {
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: 'http://movilchia.onrender.com/api',
     conversationHistory: [],
     isLoading: false,
     formCollecting: false,
