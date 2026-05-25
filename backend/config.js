@@ -4,7 +4,7 @@ require('dotenv').config();
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'dpg-d8a04brbc2fs73fkqu0g-a',
     user: process.env.DB_USER || 'movilchia_user',
-    password: process.env.DB_PASSWORD || 'qSSkdQ0dILRS4h4ZiYhJwrb5e6jYen8z',
+    password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'movilidad_chia',
     port: process.env.DB_PORT || 5432,
     waitForConnections: true,
