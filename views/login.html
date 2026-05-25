@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - MóvilChía</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -47,7 +50,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: 
+            background:
                 radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200, 168, 75, 0.1) 0%, transparent 70%),
                 radial-gradient(ellipse 40% 80% at 10% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
             pointer-events: none;
@@ -159,6 +162,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -300,9 +304,19 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
 
         .success-message {
@@ -407,6 +421,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-card">
@@ -426,32 +441,20 @@
             <form id="loginForm" class="auth-form active" data-form="login">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
-                    <input 
-                        type="email" 
-                        id="loginEmail" 
-                        name="email" 
-                        placeholder="tu@email.com"
-                        required
-                    >
+                    <input type="email" id="loginEmail" name="email" placeholder="tu@email.com" required>
                     <small class="error-text" id="loginEmailError"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="loginPassword">Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="loginPassword" 
-                        name="password" 
-                        placeholder="••••••••"
-                        required
-                    >
+                    <input type="password" id="loginPassword" name="password" placeholder="••••••••" required>
                     <small class="error-text" id="loginPasswordError"></small>
                 </div>
 
                 <button type="submit" class="auth-btn">Iniciar Sesión</button>
 
                 <div class="form-info">
-                    ¿Olvidaste tu contraseña? 
+                    ¿Olvidaste tu contraseña?
                     <a href="#">Recuperar aquí</a>
                 </div>
 
@@ -463,71 +466,38 @@
             <form id="registroForm" class="auth-form" data-form="registro">
                 <div class="form-group">
                     <label for="regNombre">Nombre Completo</label>
-                    <input 
-                        type="text" 
-                        id="regNombre" 
-                        name="nombre" 
-                        placeholder="Juan Pérez"
-                        required
-                    >
+                    <input type="text" id="regNombre" name="nombre" placeholder="Juan Pérez" required>
                     <small class="error-text" id="regNombreError"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regEmail">Email</label>
-                    <input 
-                        type="email" 
-                        id="regEmail" 
-                        name="email" 
-                        placeholder="tu@email.com"
-                        required
-                    >
+                    <input type="email" id="regEmail" name="email" placeholder="tu@email.com" required>
                     <small class="error-text" id="regEmailError"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regPhone">Teléfono (opcional)</label>
-                    <input 
-                        type="tel" 
-                        id="regPhone" 
-                        name="telefono" 
-                        placeholder="310 1234567"
-                    >
+                    <input type="tel" id="regPhone" name="telefono" placeholder="310 1234567">
                     <small class="error-text" id="regPhoneError"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="regPassword">Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="regPassword" 
-                        name="password" 
-                        placeholder="Mínimo 8 caracteres"
-                        required
-                    >
+                    <input type="password" id="regPassword" name="password" placeholder="Mínimo 8 caracteres" required>
                     <small class="error-text" id="regPasswordError"></small>
                     <small class="info-text">Usa al menos 8 caracteres, números y mayúsculas</small>
                 </div>
 
                 <div class="form-group">
                     <label for="regPasswordConfirm">Confirmar Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="regPasswordConfirm" 
-                        name="passwordConfirm" 
-                        placeholder="Repite la contraseña"
-                        required
-                    >
+                    <input type="password" id="regPasswordConfirm" name="passwordConfirm"
+                        placeholder="Repite la contraseña" required>
                     <small class="error-text" id="regPasswordConfirmError"></small>
                 </div>
 
                 <div class="form-group checkbox">
-                    <input 
-                        type="checkbox" 
-                        id="regTerms" 
-                        name="terms"
-                        required
-                    >
+                    <input type="checkbox" id="regTerms" name="terms" required>
                     <label for="regTerms">Acepto los términos de servicio</label>
                     <small class="error-text" id="regTermsError"></small>
                 </div>
@@ -550,30 +520,30 @@
     <script src="/js/auth.js"></script>
     <script>
         // Manejador simple de tabs
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('🔐 DOM cargado - inicializando tabs');
-            
+
             const tabs = document.querySelectorAll('.auth-tab');
             tabs.forEach(tab => {
-                tab.addEventListener('click', function(e) {
+                tab.addEventListener('click', function (e) {
                     e.preventDefault();
                     const tabName = this.getAttribute('data-tab');
-                    
+
                     console.log('Tab clickeado:', tabName);
-                    
+
                     // Remover clase active de todos los tabs
                     document.querySelectorAll('.auth-tab').forEach(t => {
                         t.classList.remove('active');
                     });
-                    
+
                     // Agregar clase active al tab clickeado
                     this.classList.add('active');
-                    
+
                     // Ocultar todos los formularios
                     document.querySelectorAll('.auth-form').forEach(form => {
                         form.classList.remove('active');
                     });
-                    
+
                     // Mostrar el formulario correspondiente
                     const form = document.querySelector(`[data-form="${tabName}"]`);
                     if (form) {
@@ -582,9 +552,10 @@
                     }
                 });
             });
-            
+
             console.log('✅ Tabs inicializados');
         });
     </script>
 </body>
+
 </html>

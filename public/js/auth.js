@@ -254,7 +254,7 @@ class AuthManager {
 
             // Redirigir después de 1.5 segundos
             setTimeout(() => {
-                window.location.href = '/dashboard';
+                window.location.href = '/';
             }, 1500);
 
         } catch (error) {
@@ -282,7 +282,7 @@ class AuthManager {
         const isPhoneValid = this.validatePhone('regPhone', 'regPhoneError');
         const isTermsValid = this.validateTerms();
 
-        if (!isNameValid || !isEmailValid || !isPasswordValid || 
+        if (!isNameValid || !isEmailValid || !isPasswordValid ||
             !isPasswordMatchValid || !isPhoneValid || !isTermsValid) {
             return;
         }

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Reporte - MóvilChía</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --verde: #1a5c3a;
@@ -20,7 +23,11 @@
             --radio: 16px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'DM Sans', sans-serif;
@@ -35,7 +42,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
         }
 
         .logo {
@@ -44,7 +51,9 @@
             font-weight: 900;
         }
 
-        .logo span { color: var(--dorado); }
+        .logo span {
+            color: var(--dorado);
+        }
 
         .container {
             max-width: 600px;
@@ -52,7 +61,7 @@
             padding: 48px;
             background: var(--blanco);
             border-radius: var(--radio);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
@@ -170,11 +179,18 @@
         }
 
         @media (max-width: 600px) {
-            .navbar { padding: 16px 24px; }
-            .container { margin: 20px 16px; padding: 24px; }
+            .navbar {
+                padding: 16px 24px;
+            }
+
+            .container {
+                margin: 20px 16px;
+                padding: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="navbar">
         <div class="logo">Móvil<span>Chía</span></div>
@@ -187,31 +203,23 @@
         <h1>📝 Crear Nuevo Reporte</h1>
 
         <div class="info-alert">
-            ⓘ Tu reporte ayuda a la comunidad de Chía a identificar problemas de movilidad. 
+            ⓘ Tu reporte ayuda a la comunidad de Chía a identificar problemas de movilidad.
             Sé específico y detallado para que sea más útil.
         </div>
 
         <form id="reporteForm">
             <div class="form-group">
                 <label for="titulo">Título del Reporte *</label>
-                <input 
-                    type="text" 
-                    id="titulo" 
-                    name="titulo" 
-                    placeholder="Ej: Congestión Autopista Norte a las 8am"
-                    required
-                >
+                <input type="text" id="titulo" name="titulo" placeholder="Ej: Congestión Autopista Norte a las 8am"
+                    required>
                 <div class="error" id="tituloError"></div>
             </div>
 
             <div class="form-group">
                 <label for="descripcion">Descripción *</label>
-                <textarea 
-                    id="descripcion" 
-                    name="descripcion" 
+                <textarea id="descripcion" name="descripcion"
                     placeholder="Describe el problema en detalle. ¿Cuándo ocurre? ¿Quién se ve afectado? ¿Por qué es importante?"
-                    required
-                ></textarea>
+                    required></textarea>
                 <div class="error" id="descripcionError"></div>
             </div>
 
@@ -245,12 +253,7 @@
 
             <div class="form-group">
                 <label for="ubicacion">Ubicación (opcional)</label>
-                <input 
-                    type="text" 
-                    id="ubicacion" 
-                    name="ubicacion" 
-                    placeholder="Ej: Autopista Norte, Calle 193, Chía"
-                >
+                <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Autopista Norte, Calle 193, Chía">
                 <div class="error" id="ubicacionError"></div>
             </div>
 
@@ -360,8 +363,9 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/views/login.html';
+            window.location.href = '/views/login';
         }
     </script>
 </body>
+
 </html>

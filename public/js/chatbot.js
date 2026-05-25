@@ -1,12 +1,3 @@
-/**
- * ============================================================================
- * CHATBOT PARA PÁGINA RAÍZ - MOVILIDAD CHÍA
- * ============================================================================
- * Script simplificado para el chatbot en movilidad-chia.html
- * Conecta con backend /api/trafico/estado para datos en tiempo real
- * ============================================================================
- */
-
 const CHATBOT = {
     apiUrl: 'http://localhost:3000/api',
     conversationHistory: [],
@@ -47,7 +38,6 @@ const CHATBOT = {
             });
         });
 
-        // Scroll suave desde hero
         const scrollLink = document.querySelector('.scroll-cta a');
         if (scrollLink) {
             scrollLink.addEventListener('click', (e) => {
@@ -65,7 +55,6 @@ const CHATBOT = {
 
         if (!text) return;
 
-        // Limpiar input
         if (!suggestedText) {
             input.value = '';
             input.style.height = 'auto';
@@ -74,16 +63,13 @@ const CHATBOT = {
             input.style.height = 'auto';
         }
 
-        // Agregar mensaje del usuario
         this.addMessage(text, 'user');
 
-        // Agregar al historial
         this.conversationHistory.push({
             role: 'user',
             content: text
         });
 
-        // Mostrar indicador
         this.showTyping();
         this.isLoading = true;
 
@@ -110,12 +96,10 @@ const CHATBOT = {
     async generateResponse(question) {
         const questionLower = question.toLowerCase();
 
-        // Modo orientador legal de tránsito (Ley 769 de 2002)
         if (this.esConsultaLeyTransito(questionLower)) {
             return this.responderConsultaLeyTransito(question, questionLower);
         }
 
-        // Detectar si quiere reportar un problema
         const reportKeywords = ['reportar', 'crear reporte', 'problema', 'queja', 'denuncia', 'error', 'mal estado'];
         const wantsToReport = reportKeywords.some(keyword => questionLower.includes(keyword));
 
@@ -124,7 +108,6 @@ const CHATBOT = {
             return 'Perfecto. Te guiaré paso a paso para reportar el incidente:\n1) Tipo de incidente\n2) Descripción\n3) Imagen (opcional)\n4) Ubicación en mapa\n\nCuando revises el resumen, presiona Guardar Reporte.';
         }
 
-        // Detectar si quiere hacer una sugerencia o comentario
         const suggestionKeywords = ['sugerencia', 'propuesta', 'comentario', 'idea', 'mejorar', 'opinión'];
         const wantsToSuggest = suggestionKeywords.some(keyword => questionLower.includes(keyword));
 
@@ -133,7 +116,6 @@ const CHATBOT = {
             return '¡Excelente! Tus ideas nos ayudan a mejorar. Cuéntanos tu sugerencia:';
         }
 
-        // Detectar si quiere reportar un problema de tráfico
         const trafficKeywords = ['tráfico', 'trafico', 'congestión', 'congestion', 'ruta', 'como llegar', 'cuanto tarda', 'hora', 'demora', 'velocidad', 'estado vial', 'accidente', 'embotelamiento'];
         const isTrafficIssue = trafficKeywords.some(keyword => questionLower.includes(keyword));
 
@@ -142,7 +124,6 @@ const CHATBOT = {
             return 'Entendido. Vou a ayudarte a reportar el problema de tráfico. Por favor, cuéntame más:';
         }
 
-        // Detectar si es denuncia
         const denunciaKeywords = ['denuncia', 'denunciar', 'ilegal', 'violación', 'accidente grave', 'conductores irresponsables'];
         const isDenuncia = denunciaKeywords.some(keyword => questionLower.includes(keyword));
 
@@ -151,7 +132,6 @@ const CHATBOT = {
             return '🚨 Lo siento saber eso. Tu denuncia es importante. Cuéntame qué sucedió:';
         }
 
-        // Detectar palabras clave para tráfico en tiempo real
         const traficKeywords = ['tráfico', 'trafico', 'congestión', 'congestion', 'ruta', 'como llegar', 'cuanto tarda', 'hora', 'demora', 'velocidad', 'estado vial'];
         const isTraficQuestion = traficKeywords.some(keyword => questionLower.includes(keyword));
 
@@ -159,7 +139,6 @@ const CHATBOT = {
             return await this.obtenerTraficoEnTiempoReal();
         }
 
-        // Respuestas basadas en palabras clave
         if (questionLower.includes('regiotram')) {
             return '🚆 El REGIOTRAM del Norte es un proyecto de transporte rápido que conectará Bogotá con Zipaquirá pasando por Chía. Actualmente en construcción, se espera que revolucione la movilidad en la región.\n\n¿Quieres reportar un problema relacionado?';
         }
@@ -180,7 +159,6 @@ const CHATBOT = {
             return '🛣️ La Autopista Norte es crítica para Chía. Actualmente experimenta congestión crónica, especialmente en horas pico. El REGIOTRAM podría aliviar esta presión. ¿Hay algún problema específico?';
         }
 
-        // Respuesta genérica
         return '¡Excelente pregunta sobre movilidad en Chía! 🗺️\n\nPuedo ayudarte con:\n• Estado actual de tráfico 🚗\n• Crear reportes de problemas 📝\n• Hacer sugerencias de mejora 💡\n• Proyectos como REGIOTRAM 🚆\n\n¿Qué necesitas?';
     },
 
@@ -199,7 +177,6 @@ const CHATBOT = {
     },
 
     responderConsultaLeyTransito(question, questionLower) {
-        // Restricción de alcance: solo orientación vial
         if (!this.esConsultaLeyTransito(questionLower)) {
             return 'Puedo orientarte únicamente en temas de tránsito y seguridad vial en Colombia (Ley 769 de 2002), como comparendos, señales, sanciones, documentación y deberes de conductores o peatones.';
         }
@@ -703,7 +680,6 @@ const CHATBOT = {
                         errorMessage = errorData.error;
                     }
                 } catch (e) {
-                    // Si la respuesta no es JSON, se usa mensaje genérico.
                 }
                 throw new Error(errorMessage);
             }
@@ -733,7 +709,7 @@ const CHATBOT = {
         }
 
         const token = localStorage.getItem('token');
-        
+
         if (!token) {
             alert('Debes iniciar sesión para publicar comentarios');
             window.location.href = '/views/login.html';
@@ -783,15 +759,14 @@ const CHATBOT = {
             const datos = await response.json();
             const info = datos.estimacion || datos;
 
-            // Construir respuesta visual
             let respuesta = `🗺️ **Estado de Tráfico en Chía**\n\n`;
             respuesta += `${info.informacion || 'Actualizando estado...'}\n\n`;
 
             if (info.puntos) {
                 respuesta += `📍 **Por Zonas:**\n`;
                 for (const [zona, detalle] of Object.entries(info.puntos)) {
-                    const emoji = detalle.nivel === 'congestionado' ? '🔴' : 
-                                 detalle.nivel === 'moderado' ? '🟡' : '🟢';
+                    const emoji = detalle.nivel === 'congestionado' ? '🔴' :
+                        detalle.nivel === 'moderado' ? '🟡' : '🟢';
                     respuesta += `${emoji} ${zona}: ${detalle.nivel} (${detalle.estimado_velocidad_kmh} km/h)\n`;
                 }
             }
@@ -853,9 +828,6 @@ const CHATBOT = {
     }
 };
 
-// ============================================================================
-// INICIALIZACIÓN
-// ============================================================================
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -865,7 +837,6 @@ if (document.readyState === 'loading') {
     CHATBOT.init();
 }
 
-// Compatibilidad con código HTML existente
 function sendMessage(text) {
     CHATBOT.sendMessage(text);
 }

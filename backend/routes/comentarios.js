@@ -1,12 +1,3 @@
-/**
- * ============================================================================
- * RUTAS DE COMENTARIOS/FORO - PLATAFORMA DE MOVILIDAD CHÍA
- * ============================================================================
- * Permite a ciudadanos compartir observaciones, denuncias y sugerencias
- * sobre la situación de movilidad en Chía
- * ============================================================================
- */
-
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -16,7 +7,6 @@ const { executeQuery, executeQueryOne } = require('../config');
 const { authenticateToken } = require('../auth');
 const validator = require('validator');
 
-// Configurar almacenamiento para multer
 const uploadDir = path.join(__dirname, '..', '..', 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -34,7 +24,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
         if (allowedTypes.includes(file.mimetype)) {
@@ -45,10 +35,6 @@ const upload = multer({
     }
 });
 
-/**
- * Listar comentarios públicos (sin autenticación)
- * GET /api/comentarios?tipo=&zona=&pagina=
- */
 router.get('/', async (req, res) => {
     try {
         const { tipo, zona, pagina = 1, limite = 10 } = req.query;
@@ -73,10 +59,9 @@ router.get('/', async (req, res) => {
 
         const comentarios = await executeQuery(query, params);
 
-        // Contar total
         let countQuery = 'SELECT COUNT(*) as total FROM comentarios WHERE estado = ?';
         const countParams = ['publicado'];
-        
+
         if (tipo) {
             countQuery += ' AND tipo = ?';
             countParams.push(tipo);
@@ -103,10 +88,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-/**
- * Obtener un comentario específico
- * GET /api/comentarios/:id
- */
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -128,11 +109,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-/**
- * Crear nuevo comentario (requiere autenticación)
- * POST /api/comentarios
- * Soporta: multipart/form-data con imagen opcional
- */
 router.post('/', authenticateToken, upload.single('imagen'), async (req, res) => {
     try {
         const { titulo, contenido, zona, tipo, latitud, longitud } = req.body;
@@ -143,7 +119,6 @@ router.post('/', authenticateToken, upload.single('imagen'), async (req, res) =>
             return res.status(401).json({ error: 'Usuario no autenticado correctamente' });
         }
 
-        // Validación
         if (!titulo || titulo.trim().length < 5) {
             if (req.file) fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Título debe tener al menos 5 caracteres' });
@@ -159,18 +134,15 @@ router.post('/', authenticateToken, upload.single('imagen'), async (req, res) =>
             return res.status(400).json({ error: 'Tipo de comentario inválido' });
         }
 
-        // Sanitizar
         const tituloSanitizado = validator.escape(titulo.trim()).substring(0, 255);
         const contenidoSanitizado = validator.escape(contenido.trim());
         const zonaSanitizada = zona ? validator.escape(zona.trim()).substring(0, 150) : 'Chía (General)';
-        
-        // Procesar imagen
+
         let imageUrl = null;
         if (req.file) {
             imageUrl = `/uploads/${req.file.filename}`;
         }
 
-        // Procesar ubicación
         let lat = null;
         let lng = null;
         if (latitud && longitud) {
@@ -204,7 +176,6 @@ router.post('/', authenticateToken, upload.single('imagen'), async (req, res) =>
         });
 
     } catch (error) {
-        // Limpiar archivo si hay error
         if (req.file) {
             try {
                 fs.unlinkSync(req.file.path);
@@ -217,21 +188,17 @@ router.post('/', authenticateToken, upload.single('imagen'), async (req, res) =>
     }
 });
 
-/**
- * Votar en un comentario (requiere autenticación)
- * POST /api/comentarios/:id/voto
- */
 router.post('/:id/voto', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
-        const { tipo } = req.body; // 'positivo' o 'negativo'
+        const { tipo } = req.body;
 
         if (!['positivo', 'negativo'].includes(tipo)) {
             return res.status(400).json({ error: 'Tipo de voto inválido' });
         }
 
         const comentario = await executeQueryOne('SELECT * FROM comentarios WHERE id = ?', [id]);
-        
+
         if (!comentario) {
             return res.status(404).json({ error: 'Comentario no encontrado' });
         }

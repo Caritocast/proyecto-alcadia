@@ -34,8 +34,8 @@ CREATE TABLE usuarios (
 CREATE TABLE reportes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     usuario_id INT NOT NULL,
-    tipo ENUM('congestión', 'infraestructura', 'transporte_público', 'ciclovía', 
-              'seguridad_vial', 'ambiental', 'conexión_bogotá', 'otro') NOT NULL,
+    tipo ENUM('congestión', 'infraestructura', 'transporte_público', 'ciclovía',
+            'seguridad_vial', 'ambiental', 'conexión_bogotá', 'otro') NOT NULL,
     severidad ENUM('baja', 'media', 'alta', 'crítica') DEFAULT 'media',
     titulo VARCHAR(200) NOT NULL,
     descripcion TEXT NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE reportes (
     
     -- Auditoría
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualización TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     -- Relaciones y índices
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
@@ -179,8 +179,8 @@ CREATE TABLE comentarios (
 
 -- Vista: Reportes por tipo
 CREATE VIEW reporte_por_tipo AS
-SELECT tipo, COUNT(*) as total, 
-       SUM(CASE WHEN estado='resuelto' THEN 1 ELSE 0 END) as resueltos
+SELECT tipo, COUNT(*) as total,
+    SUM(CASE WHEN estado='resuelto' THEN 1 ELSE 0 END) as resueltos
 FROM reportes
 GROUP BY tipo;
 

@@ -17,7 +17,7 @@ const COMENTARIOS = {
         this.actualizarMenuUsuario();
         this.registrarEventosUI();
         this.cargarComentarios();
-        
+
         // Mostrar botón si está autenticado
         if (this.usuarioAutenticado) {
             const btn = document.getElementById('comentario-crear-btn');
@@ -78,14 +78,14 @@ const COMENTARIOS = {
     async cargarComentarios() {
         try {
             let url = `${this.apiUrl}?pagina=1&limite=12`;
-            
+
             // Agregar filtro si no es "todos"
             if (this.filtroActual !== 'todos') {
                 url += `&tipo=${this.filtroActual}`;
             }
-            
+
             const response = await fetch(url);
-            
+
             if (!response.ok) {
                 throw new Error('Error al cargar comentarios');
             }
@@ -102,7 +102,7 @@ const COMENTARIOS = {
 
     mostrarComentarios(comentarios) {
         const lista = document.getElementById('comentarios-lista');
-        
+
         if (!comentarios || comentarios.length === 0) {
             lista.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--gris);">No hay comentarios aún. ¡Sé el primero en compartir!</p>';
             return;
@@ -180,17 +180,17 @@ const COMENTARIOS = {
                 formData.append('latitud', lat);
                 formData.append('longitud', lng);
             }
-            
+
             // Agregar imagen si existe
             if (imagenInput.files && imagenInput.files.length > 0) {
                 const file = imagenInput.files[0];
-                
+
                 // Validar tamaño (máx 5MB)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('La imagen no puede exceder 5MB');
                     return;
                 }
-                
+
                 formData.append('imagen', file);
             }
 
@@ -256,7 +256,7 @@ const COMENTARIOS = {
         document.getElementById('comentario-lat').value = '';
         document.getElementById('comentario-lng').value = '';
         document.getElementById('ubicacion-info').textContent = '';
-        
+
         // Restaurar botón de ubicación
         const botonUbicacion = document.getElementById('comentario-ubicacion-btn');
         if (botonUbicacion) {
@@ -269,7 +269,7 @@ const COMENTARIOS = {
 
     async filtrarTipo(tipo, botonActivo = null) {
         this.filtroActual = tipo;
-        
+
         // Actualizar botones de filtro
         document.querySelectorAll('.filtro-btn').forEach(btn => {
             btn.classList.remove('activo');
@@ -277,7 +277,7 @@ const COMENTARIOS = {
         if (botonActivo) {
             botonActivo.classList.add('activo');
         }
-        
+
         // Recargar comentarios
         this.cargarComentarios();
     },
