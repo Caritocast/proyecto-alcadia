@@ -29,6 +29,7 @@
     "mysql2": "^3.22.3",
     "node-fetch": "^3.3.2",
     "openai": "^6.39.0",
+    "pg": "^8.21.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {
