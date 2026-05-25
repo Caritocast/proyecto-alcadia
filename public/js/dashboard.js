@@ -22,7 +22,7 @@ if (userNameEl) {
 
 // Cargar contenido del dashboard
 async function loadDashboard() {
-    const apiUrl = 'http://localhost:3000/api';
+    const apiUrl = 'http:////movilchia.onrender.com/api';
 
     try {
         // Obtener datos del usuario

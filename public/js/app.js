@@ -10,7 +10,7 @@
  */
 
 const APP = {
-    apiUrl: 'http://localhost:3000/api',
+    apiUrl: 'http://movilchia.onrender.com/api',
     token: localStorage.getItem('token'),
     user: JSON.parse(localStorage.getItem('user') || 'null'),
     conversationHistory: [],
@@ -21,7 +21,7 @@ const APP = {
      */
     init() {
         console.log('🚀 Inicializando MóvilChía...');
-        
+
         this.setupChatbot();
         this.setupForms();
         this.setupNavigation();
@@ -155,7 +155,7 @@ const APP = {
     async obtenerInfoTrafico(question) {
         try {
             const response = await fetch(`${this.apiUrl}/trafico/estado`);
-            
+
             if (!response.ok) {
                 throw new Error('Error al obtener tráfico');
             }
@@ -166,7 +166,7 @@ const APP = {
             // Construir respuesta descriptiva
             let respuesta = `🗺️ **Estado de Tráfico en Chía**\n\n`;
             respuesta += `${estimacion.informacion || ''}\n\n`;
-            
+
             if (estimacion.puntos) {
                 respuesta += `📍 **Por zonas:**\n`;
                 for (const [zona, info] of Object.entries(estimacion.puntos)) {

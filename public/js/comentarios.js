@@ -7,7 +7,7 @@
  */
 
 const COMENTARIOS = {
-    apiUrl: 'http://localhost:3000/api/comentarios',
+    apiUrl: 'http:////movilchia.onrender.com/api/comentarios',
     usuarioAutenticado: JSON.parse(localStorage.getItem('user') || 'null'),
     token: localStorage.getItem('token'),
     filtroActual: 'todos',
