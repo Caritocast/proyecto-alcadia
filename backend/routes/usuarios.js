@@ -8,27 +8,34 @@ const router = express.Router();
 function isMissingReportesTable(error) {
     return error && (error.code === 'ER_NO_SUCH_TABLE' || String(error.message || '').includes("reportes"));
 }
+router.post('/registro', async (req, res) => {
+    const { nombre, email, telefono, password } = req.body;
 
-/**
- * ============================================================================
- * GET /api/usuarios
- * Listar todos los usuarios (solo admin)
- * 
- * Query parameters:
- * ?rol=ciudadano         - Filtrar por rol
- * ?activo=true           - Solo activos
- * ?search=juan           - Buscar por nombre o email
- * ?page=1&limit=20
- * ============================================================================
- */
+    try {
+        const result = await pool.query(
+            'INSERT INTO usuarios (nombre, email, telefono, password) VALUES ($1, $2, $3, $4) RETURNING id, nombre, email',
+            [nombre, email, telefono, password]
+        );
+
+        const user = result.rows[0];
+        res.json({
+            token: 'fake-jwt-token', // aquí deberías generar un JWT real
+            user
+        });
+    } catch (error) {
+        console.error('❌ Error al registrar usuario:', error.message);
+        res.status(500).json({ error: 'Error al registrar usuario: ' + error.message });
+    }
+});
+
 router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
     try {
         const { rol, activo, search, page = 1, limit = 20 } = req.query;
 
         let query = `
-            SELECT id, nombre, email, telefono, rol, activo, 
-                   fecha_registro, ultima_sesion,
-                   (SELECT COUNT(*) FROM reportes WHERE usuario_id = usuarios.id) as total_reportes
+            SELECT id, nombre, email, telefono, rol, activo,
+            fecha_registro, ultima_sesion,
+            (SELECT COUNT(*) FROM reportes WHERE usuario_id = usuarios.id) as total_reportes
             FROM usuarios
             WHERE 1=1
         `;
@@ -50,13 +57,11 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
             params.push(searchTerm, searchTerm);
         }
 
-        // Contar total
         const [{ total }] = await executeQuery(
             `SELECT COUNT(*) as total FROM (${query}) as temp`,
             params
         );
 
-        // Paginar
         const offset = (page - 1) * limit;
         query += ' ORDER BY fecha_registro DESC LIMIT ? OFFSET ?';
         params.push(parseInt(limit), offset);
@@ -68,7 +73,7 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
             if (isMissingReportesTable(queryError)) {
                 let fallbackQuery = `
                     SELECT id, nombre, email, telefono, rol, activo, fecha_registro, ultima_sesion,
-                           0 as total_reportes
+                        0 as total_reportes
                     FROM usuarios
                     WHERE 1=1
                 `;
@@ -104,7 +109,6 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
             limit: parseInt(limit),
             usuarios: usuarios.map(u => ({
                 ...u,
-                // No devolver hash de contraseña por seguridad
                 password_hash: undefined
             }))
         });
@@ -115,14 +119,6 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
     }
 });
 
-/**
- * ============================================================================
- * GET /api/usuarios/:id
- * Obtener un usuario específico
- * - Admin puede ver cualquiera
- * - Usuario regular solo puede ver su propio perfil
- * ============================================================================
- */
 router.get('/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -131,7 +127,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'ID inválido' });
         }
 
-        // Permisos: admin o es el mismo usuario
         if (req.user.rol !== 'admin' && req.user.userId !== parseInt(id)) {
             return res.status(403).json({
                 error: 'No tienes permiso para ver este usuario'
@@ -143,8 +138,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
             usuario = await executeQueryOne(
                 `SELECT id, nombre, email, telefono, rol, activo, fecha_registro, ultima_sesion,
                         (SELECT COUNT(*) FROM reportes WHERE usuario_id = usuarios.id) as total_reportes
-                 FROM usuarios
-                 WHERE id = ?`,
+                FROM usuarios
+                WHERE id = ?`,
                 [id]
             );
         } catch (queryError) {
@@ -152,8 +147,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
                 usuario = await executeQueryOne(
                     `SELECT id, nombre, email, telefono, rol, activo, fecha_registro, ultima_sesion,
                             0 as total_reportes
-                     FROM usuarios
-                     WHERE id = ?`,
+                    FROM usuarios
+                    WHERE id = ?`,
                     [id]
                 );
             } else {
@@ -173,24 +168,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-/**
- * ============================================================================
- * PUT /api/usuarios/:id
- * Actualizar un usuario
- * 
- * Body JSON:
- * {
- *   "nombre": "Juan Pérez García",
- *   "telefono": "3101234567"
- * }
- * 
- * Admin puede cambiar también:
- * {
- *   "rol": "moderador",
- *   "activo": false
- * }
- * ============================================================================
- */
 router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -200,7 +177,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'ID inválido' });
         }
 
-        // Obtener usuario actual
         const usuario = await executeQueryOne(
             'SELECT * FROM usuarios WHERE id = ?',
             [id]
@@ -210,18 +186,14 @@ router.put('/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Permisos: admin o es el mismo usuario
         if (req.user.rol !== 'admin' && req.user.userId !== parseInt(id)) {
             return res.status(403).json({
                 error: 'No tienes permiso para actualizar este usuario'
             });
         }
-
-        // Preparar actualización
         let updateFields = [];
         let updateValues = [];
 
-        // Campos que cualquiera puede actualizar de sí mismo
         if (nombre && nombre.length >= 3) {
             updateFields.push('nombre = ?');
             updateValues.push(validator.escape(nombre));
@@ -232,9 +204,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
             updateValues.push(telefono ? validator.escape(telefono) : null);
         }
 
-        // Cambiar contraseña
         if (password_actual && password_nuevo) {
-            // Usuario regular debe conocer su contraseña actual
             if (req.user.rol !== 'admin' && req.user.userId === parseInt(id)) {
                 const bcrypt = require('bcryptjs');
                 const isValid = await bcrypt.compare(password_actual, usuario.password_hash);
@@ -257,7 +227,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
             updateValues.push(newHash);
         }
 
-        // Campos que solo admin puede actualizar
         if (req.user.rol === 'admin') {
             if (rol) {
                 const rolesValidos = ['ciudadano', 'admin', 'moderador'];
@@ -303,15 +272,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-/**
- * ============================================================================
- * DELETE /api/usuarios/:id
- * Eliminar un usuario (solo admin)
- * 
- * Nota: Usa ON DELETE CASCADE en la BD
- * Cuando se borra el usuario, se borran automáticamente sus reportes, etc.
- * ============================================================================
- */
 router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
     try {
         const { id } = req.params;
@@ -320,7 +280,6 @@ router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res
             return res.status(400).json({ error: 'ID inválido' });
         }
 
-        // No puedes borrarte a ti mismo
         if (req.user.userId === parseInt(id)) {
             return res.status(400).json({
                 error: 'No puedes eliminar tu propia cuenta'
@@ -348,12 +307,6 @@ router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res
     }
 });
 
-/**
- * ============================================================================
- * GET /api/usuarios/:id/reportes
- * Obtener todos los reportes de un usuario
- * ============================================================================
- */
 router.get('/:id/reportes', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -373,7 +326,6 @@ router.get('/:id/reportes', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Parámetro limit inválido (1-100)' });
         }
 
-        // Verificar que usuario existe
         const usuario = await executeQueryOne(
             'SELECT id FROM usuarios WHERE id = ?',
             [id]
@@ -386,20 +338,18 @@ router.get('/:id/reportes', authenticateToken, async (req, res) => {
         let total = 0;
         let reportes = [];
         try {
-            // Contar total de reportes
             const totalResult = await executeQuery(
                 'SELECT COUNT(*) as total FROM reportes WHERE usuario_id = ?',
                 [id]
             );
             total = totalResult[0]?.total || 0;
 
-            // Obtener reportes paginados
             const offset = (pageNumber - 1) * limitNumber;
             reportes = await executeQuery(
-                `SELECT * FROM reportes 
-                 WHERE usuario_id = ? 
-                 ORDER BY fecha_creacion DESC 
-                 LIMIT ${limitNumber} OFFSET ${offset}`,
+                `SELECT * FROM reportes
+                WHERE usuario_id = ?
+                ORDER BY fecha_creacion DESC
+                LIMIT ${limitNumber} OFFSET ${offset}`,
                 [id]
             );
         } catch (queryError) {
@@ -425,42 +375,3 @@ router.get('/:id/reportes', authenticateToken, async (req, res) => {
 
 module.exports = router;
 
-/**
- * ============================================================================
- * EXPLICACIÓN EDUCATIVA
- * ============================================================================
- * 
- * ¿CASCADA DE ELIMINACIÓN (ON DELETE CASCADE)?
- * Cuando eliminas usuario:
- * - BD automáticamente elimina todos sus reportes
- * - Evita datos huérfanos
- * - Definido en FOREIGN KEY en setup.sql
- * 
- * ¿SEGURIDAD EN CAMBIO DE CONTRASEÑA?
- * Usuario regular debe proporcionar:
- * 1. password_actual: verifica que conoce su password
- * 2. password_nuevo: nueva contraseña a establecer
- * 
- * Flow seguro:
- * 1. Cliente envía password_actual y password_nuevo
- * 2. Server hashea password_actual, compara con lo que hay en BD
- * 3. Si coincide, hashea password_nuevo y lo almacena
- * 4. Nunca transmitir password en plain text (usar HTTPS)
- * 
- * ¿PROTECCIÓN DE DATOS SENSIBLES?
- * - No devolver password_hash en respuestas JSON
- * - No loguear passwords
- * - Usar HTTPS siempre
- * - Validar en backend (nunca confiar en frontend)
- * 
- * ¿ROLES Y PERMISOS?
- * - ciudadano: usuario regular, solo ve/edita sus propios reportes
- * - moderador: revisa reportes, puede responder (futuro)
- * - admin: acceso completo, gestiona usuarios y datos
- * 
- * ¿AUDITORIA?
- * Cada usuario tiene:
- * - fecha_registro: cuándo se creó cuenta
- * - ultima_sesion: cuándo fue el último login
- * - Sirve para detectar cuentas inactivas o comportamientos sospechosos
- */
