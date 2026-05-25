@@ -58,8 +58,8 @@ async function registerUser(userData) {
     try {
         const result = await executeQuery(
             `INSERT INTO usuarios (nombre, email, password_hash, telefono, rol) 
-            VALUES (?, ?, ?, ?, 'ciudadano')`,
-            [nombre, email, passwordHash, telefono || null]
+            VALUES ($1, $2, $3, $4, 'ciudadano')`,
+            [nombre, email, password, telefono || null]
         );
 
         const userId = result.insertId;
