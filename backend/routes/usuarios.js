@@ -1,14 +1,3 @@
-/**
- * ============================================================================
- * RUTAS DE USUARIOS (ADMINISTRACIÓN)
- * ============================================================================
- * GET    /api/usuarios              - Listar usuarios (admin)
- * GET    /api/usuarios/:id          - Obtener usuario (admin/self)
- * PUT    /api/usuarios/:id          - Actualizar usuario (admin/self)
- * DELETE /api/usuarios/:id          - Eliminar usuario (admin)
- * ============================================================================
- */
-
 const express = require('express');
 const validator = require('validator');
 const { authenticateToken, authorizeRole, hashPassword } = require('../auth');

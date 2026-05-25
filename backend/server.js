@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN || 'https://movilchia.onrender.com',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -111,10 +111,10 @@ async function startServer() {
 ╔════════════════════════════════════════════════════════════╗
 ║  🚀 SERVIDOR MOVILIDAD CHÍA INICIADO                      ║
 ╠════════════════════════════════════════════════════════════╣
-║  🌐 http://localhost:${PORT}
-║  📚 API:  http://localhost:${PORT}/api/*
+║  🌐 http://movilchia.onrender.com:${PORT}
+║  📚 API:  https://movilchia.onrender.com${PORT}/api/*
 ║  🛠️  Ambiente: ${process.env.NODE_ENV || 'development'}
-║  🔒 CORS: ${process.env.CORS_ORIGIN || 'localhost:3000'}
+║  🔒 CORS: ${process.env.CORS_ORIGIN || 'https://movilchia.onrender.com'}
 ╚════════════════════════════════════════════════════════════╝
             `);
         });
